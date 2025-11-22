@@ -78,4 +78,11 @@ WIP，上架中
       <strong><a href="https://glidea.zenfeed.xyz/">我的其它项目</a></strong>
     </td>
   </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="https://github.com/glidea/banana-prompt-quicker/blob/main/images/readnote.png?raw=true" width="250">
+      <br>
+      <strong><a href="https://www.xiaohongshu.com/user/profile/5f7dc54d0000000001004afb">📕 小红书账号 - 持续分享 AI 原创</a></strong>
+    </td>
+  </tr>
 </table>
