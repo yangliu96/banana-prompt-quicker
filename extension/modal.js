@@ -14,6 +14,35 @@ OK，我想要：`,
     isFlash: true
 }
 
+// ========== 导出所有 Prompt 的函数 ==========
+
+async function exportAllPrompts() {
+    const local = await chrome.storage.local.get(null)
+    const sync = await chrome.storage.sync.get(null)
+
+    const exportData = {
+        officialPrompts: local["banana_prompts_cache"] || [],
+        customPrompts: local["banana-custom-prompts"] || [],
+        favorites: sync["banana-favorites"] || [],
+        exportTime: new Date().toISOString()
+    }
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: "application/json"
+    })
+
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "banana_prompts_export.json"
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+
+    console.log("🍌 导出完成：banana_prompts_export.json")
+}
+
 class BananaModal {
     constructor(adapter) {
         this.adapter = adapter
@@ -432,6 +461,24 @@ class BananaModal {
         const addBtn = document.createElement('button')
         addBtn.textContent = '+'
         addBtn.title = '添加自定义 Prompt'
+        // ========== 导出按钮 ==========
+        const exportBtn = document.createElement('button')
+        exportBtn.textContent = '导出'
+        exportBtn.title = '导出所有 Prompts'
+        exportBtn.style.cssText = `
+            padding: ${mobile ? '10px 18px' : '8px 18px'};
+            border: 1px solid ${colors.border};
+            border-radius: 20px;
+            background: ${colors.surface};
+            color: ${colors.text};
+            font-size: ${mobile ? '14px' : '13px'};
+            cursor: pointer;
+            transition: all 0.25s ease;
+        `
+        exportBtn.onclick = () => exportAllPrompts()
+
+        buttonsContainer.appendChild(exportBtn)
+        
         addBtn.style.cssText = `padding: ${mobile ? '10px 18px' : '8px 18px'}; border: 1px solid ${colors.primary}; border-radius: 20px; background: ${colors.primary}; color: white; font-size: ${mobile ? '18px' : '16px'}; font-weight: 600; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 2px 8px ${colors.shadow};`
         addBtn.onclick = () => this.showAddPromptModal()
 
