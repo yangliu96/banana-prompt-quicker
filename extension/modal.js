@@ -1153,8 +1153,52 @@ class BananaModal {
         const promptInput = createInput('Prompt 内容', true)
 
         // Category Dropdown for Add Prompt
+        // const categoryContainer = document.createElement('div')
+        // categoryContainer.style.cssText = 'position: relative; width: 100%; z-index: 10;'
+
+        // // === 新增：允许用户输入自定义分类 ===
+        // const newCategoryInput = document.createElement('input')
+        // newCategoryInput.placeholder = '输入新分类（可选）'
+        // newCategoryInput.style.cssText =
+        //     `width: 100%; margin-top: 10px; padding: ${mobile ? '14px 16px' : '12px 16px'};
+        //     border: 1px solid ${colors.inputBorder}; border-radius: 12px;
+        //     background: ${colors.inputBg}; color: ${colors.text}; font-size: 14px;
+        //     outline: none; box-sizing: border-box; transition: all 0.2s;`
+        // newCategoryInput.onfocus = () => {
+        //     newCategoryInput.style.borderColor = colors.primary
+        //     newCategoryInput.style.boxShadow = `0 0 0 3px ${colors.primary}15`
+        // }
+        // newCategoryInput.onblur = () => {
+        //     newCategoryInput.style.borderColor = colors.inputBorder
+        //     newCategoryInput.style.boxShadow = 'none'
+        // }
+
+        // categoryContainer.appendChild(newCategoryInput)
+
+        // === Category Container ===
         const categoryContainer = document.createElement('div')
         categoryContainer.style.cssText = 'position: relative; width: 100%; z-index: 10;'
+
+
+        // === 新增：允许用户输入自定义分类 ===
+        const newCategoryInput = document.createElement('input')
+        newCategoryInput.placeholder = '输入新分类（可选）'
+        newCategoryInput.style.cssText =
+            `width: 100%; margin-top: 10px; padding: ${mobile ? '14px 16px' : '12px 16px'};
+            border: 1px solid ${colors.inputBorder}; border-radius: 12px;
+            background: ${colors.inputBg}; color: ${colors.text}; font-size: 14px;
+            outline: none; box-sizing: border-box; transition: all 0.2s;`
+        newCategoryInput.onfocus = () => {
+            newCategoryInput.style.borderColor = colors.primary
+            newCategoryInput.style.boxShadow = `0 0 0 3px ${colors.primary}15`
+        }
+        newCategoryInput.onblur = () => {
+            newCategoryInput.style.borderColor = colors.inputBorder
+            newCategoryInput.style.boxShadow = 'none'
+        }
+
+        // ⭐ 放这里才是正确的位置
+        categoryContainer.appendChild(newCategoryInput)
 
         const categoryTrigger = document.createElement('div')
         categoryTrigger.style.cssText = `width: 100%; padding: ${mobile ? '14px 16px' : '12px 16px'}; border: 1px solid ${colors.inputBorder}; border-radius: 12px; background: ${colors.inputBg}; color: ${colors.text}; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;`
@@ -1348,11 +1392,18 @@ class BananaModal {
                 }
             }
 
+            // ⭐⭐⭐ 新增逻辑：优先使用新分类
+            let finalCategory = newCategoryInput.value.trim()
+            if (!finalCategory) {
+                // 如果没有输入新分类，则使用下拉框选择的分类
+                finalCategory = selectedAddCategory
+            }
+
             await this.saveCustomPrompt({
                 title: titleVal,
                 prompt: promptVal,
                 mode: selectedMode,
-                category: selectedAddCategory,
+                category: finalCategory,  // ⭐ 使用最终分类
                 preview: previewDataUrl
             })
             document.body.removeChild(overlay)
